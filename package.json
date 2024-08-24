@@ -4,16 +4,20 @@
   "description": "E-com with SSR",
   "main": "app.js",
   "scripts": {
-    "start":"npx nodemon app.js",
+    "start": "npx nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "ejs": "^3.1.10",
     "express": "^4.19.2",
+    "express-session": "^1.18.0",
     "mongoose": "^8.5.4",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0"
   }
 }
