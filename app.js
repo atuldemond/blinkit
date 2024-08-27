@@ -31,6 +31,13 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/", indexRouter);
 // app.use("/auth", authRouter);
+app.all("*", (req, res) => {
+  res.status(404).send({
+    message: "The requested resource was not found",
+    method: req.method,
+    url: req.originalUrl,
+  });
+});
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
