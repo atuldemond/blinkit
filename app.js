@@ -3,6 +3,7 @@ const app = express();
 const indexRouter = require("./routes/indexRouter");
 const path = require("path");
 const authRouter = require("./routes/auth");
+const adminRouter = require("./routes/admin");
 const expressSession = require("express-session");
 
 //dotenv
@@ -32,6 +33,7 @@ app.use(
 
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
+app.use("/admin", adminRouter);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
