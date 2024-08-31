@@ -4,7 +4,10 @@ const indexRouter = require("./routes/indexRouter");
 const path = require("path");
 const authRouter = require("./routes/auth");
 const adminRouter = require("./routes/admin");
+const productRouter = require("./routes/product");
+const categoryRouter = require("./routes/category");
 const expressSession = require("express-session");
+const cookieParser = require("cookie-parser");
 
 //dotenv
 require("dotenv").config();
@@ -30,10 +33,13 @@ app.use(
     cookie: { secure: false }, // Set to true if using HTTPS
   })
 );
+app.use(cookieParser());
 
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
 app.use("/admin", adminRouter);
+app.use("/products", productRouter);
+app.use("/category", categoryRouter);
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");
