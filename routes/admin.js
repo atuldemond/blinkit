@@ -5,6 +5,7 @@ const { productModel } = require("../models/product");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const validateAdmin = require("../middleware/admin");
+const { categoryModel } = require("../models/category");
 
 router.get("/create", async (req, res) => {
   try {
@@ -54,8 +55,11 @@ router.post("/login", async (req, res) => {
   }
 });
 
-router.get("/dashboard", validateAdmin, (req, res) => {
-  res.render("admin_dashboard");
+router.get("/dashboard", validateAdmin, async (req, res) => {
+  let prodcount = await productModel.countDocuments();
+  let categcount = await categoryModel.countDocuments();
+
+  res.render("admin_dashboard", { prodcount, categcount });
 });
 
 router.get("/products", validateAdmin, async (req, res) => {

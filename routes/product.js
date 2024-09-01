@@ -8,7 +8,7 @@ const { string } = require("joi");
 const validateAdmin = require("../middleware/admin");
 router.get("/", async (re, res) => {
   let prods = await productModel.find();
-  res.send(prods);
+  res.render("index");
 });
 router.get("/delete/:id", validateAdmin, async (req, res) => {
   if (req.user.admin) {
