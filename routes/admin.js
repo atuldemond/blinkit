@@ -4,7 +4,7 @@ const { adminModel } = require("../models/admin");
 const { productModel } = require("../models/product");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const validateAdmin = require("../middleware/admin");
+const { validateAdmin } = require("../middleware/admin");
 const { categoryModel } = require("../models/category");
 
 router.get("/create", async (req, res) => {

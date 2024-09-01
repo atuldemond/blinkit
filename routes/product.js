@@ -5,11 +5,66 @@ const { productModel, validateProduct } = require("../models/product");
 const { categoryModel, validateCategory } = require("../models/category");
 const upload = require("../config/multer_confiig");
 const { string } = require("joi");
-const validateAdmin = require("../middleware/admin");
-router.get("/", async (re, res) => {
-  let prods = await productModel.find();
-  res.render("index");
+const { validateAdmin, userIsLoggedIn } = require("../middleware/admin");
+const { cartModel, validateCart } = require("../models/cartModel");
+router.get("/", userIsLoggedIn, async (req, res) => {
+  try {
+    let somethingInCart = false;
+    const results = await productModel.aggregate([
+      {
+        $group: {
+          _id: "$category",
+          products: { $push: "$$ROOT" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          category: "$_id",
+          products: { $slice: ["$products", 10] },
+        },
+      },
+      {
+        $replaceRoot: {
+          newRoot: { $arrayToObject: [[{ k: "$category", v: "$products" }]] },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          categories: { $mergeObjects: "$$ROOT" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          categories: 1,
+        },
+      },
+    ]);
+
+    let cart = await cartModel.findOne({ user: req.session.passport.user });
+    if (cart && cart.products.length > 0) {
+      somethingInCart = true;
+    }
+    // console.log("Aggregation Results:", results);
+    let rnproducts = await productModel.aggregate([{ $sample: { size: 7 } }]);
+    // Ensure results is not empty
+    const resultObject = results.length > 0 ? results[0].categories : {};
+    // console.log("Result Object:", resultObject);
+    //
+    res.render("index", {
+      products: resultObject,
+      rnproducts,
+      somethingInCart,
+      cartCount: cart.products.length,
+    });
+  } catch (error) {
+    console.error("Error in aggregation query:", error);
+    res.status(500).send("Server Error");
+  }
 });
+
 router.get("/delete/:id", validateAdmin, async (req, res) => {
   if (req.user.admin) {
     let prods = await productModel.findOneAndDelete({ _id: req.params.id });
