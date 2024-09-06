@@ -5,8 +5,34 @@ const { validateAdmin, userIsLoggedIn } = require("../middleware/admin");
 const { productModel } = require("../models/product");
 
 router.get("/", userIsLoggedIn, async (req, res) => {
-  let cart = await cartModel.findOne({ user: req.session.passport.user });
-  res.send(cart);
+  try {
+    // Fetch and initialize the cart
+    let cart = await cartModel.findOne({ user: req.session.passport.user });
+    let cartDataStructure = {};
+    cart.products.forEach((product) => {
+      let key = product._id.toString();
+      if (cartDataStructure[key]) {
+        cartDataStructure[key].quantity += 1;
+      } else {
+        cartDataStructure[key] = {
+          _id: product._id,
+          name: product.name,
+          price: product.price,
+          quantity: 1,
+        };
+      }
+    });
+    let finalarray = Object.values(cartDataStructure);
+    console.log(finalarray);
+    res.render("cart", {
+      cart: finalarray,
+      finalprice: cart.totalPrice,
+      quantity: cart.quant,
+    });
+  } catch (error) {
+    console.error("Error in aggregation query:", error);
+    res.status(500).send("Server Error");
+  }
 });
 router.get("/add/:id", userIsLoggedIn, async (req, res) => {
   try {

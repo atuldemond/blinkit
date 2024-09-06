@@ -40,14 +40,17 @@ app.use(
 app.use(passport.initialize()); // Correct usage
 app.use(passport.session());
 app.use(cookieParser());
-
-app.use("/", indexRouter);
-app.use("/auth", authRouter);
-app.use("/admin", adminRouter);
-app.use("/products", productRouter);
-app.use("/category", categoryRouter);
-app.use("/users", userRouter);
-app.use("/cart", cartRouter);
+try {
+  app.use("/", indexRouter);
+  app.use("/auth", authRouter);
+  app.use("/admin", adminRouter);
+  app.use("/products", productRouter);
+  app.use("/category", categoryRouter);
+  app.use("/users", userRouter);
+  app.use("/cart", cartRouter);
+} catch (error) {
+  console.error("Error setting up routes:", error);
+}
 
 app.listen(3000, () => {
   console.log("Server is running on port 3000");

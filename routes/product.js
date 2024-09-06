@@ -44,20 +44,22 @@ router.get("/", userIsLoggedIn, async (req, res) => {
     ]);
 
     let cart = await cartModel.findOne({ user: req.session.passport.user });
+
+    // Ensure results is not empty before accessing categories
+    const resultObject = results.length > 0 ? results[0].categories : {};
+
+    // Handle the case where the cart is null or products array is empty
     if (cart && cart.products.length > 0) {
       somethingInCart = true;
     }
-    // console.log("Aggregation Results:", results);
+
     let rnproducts = await productModel.aggregate([{ $sample: { size: 7 } }]);
-    // Ensure results is not empty
-    const resultObject = results.length > 0 ? results[0].categories : {};
-    // console.log("Result Object:", resultObject);
-    //
+
     res.render("index", {
       products: resultObject,
       rnproducts,
       somethingInCart,
-      cartCount: cart.products.length,
+      cartCount: cart ? cart.products.length : 0, // Ensure cart exists before accessing products.length
     });
   } catch (error) {
     console.error("Error in aggregation query:", error);
