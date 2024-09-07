@@ -6,34 +6,61 @@ const { productModel } = require("../models/product");
 
 router.get("/", userIsLoggedIn, async (req, res) => {
   try {
-    // Fetch and initialize the cart
+    // Fetch the cart for the logged-in user
     let cart = await cartModel.findOne({ user: req.session.passport.user });
+
+    if (!cart || cart.products.length === 0) {
+      return res.render("cart", {
+        cart: [],
+        finalprice: 0,
+        quantity: 0,
+      });
+    }
+
     let cartDataStructure = {};
-    cart.products.forEach((product) => {
-      let key = product._id.toString();
-      if (cartDataStructure[key]) {
-        cartDataStructure[key].quantity += 1;
-      } else {
-        cartDataStructure[key] = {
-          _id: product._id,
-          name: product.name,
-          price: product.price,
-          quantity: 1,
-        };
+
+    // Fetch product details manually, including the image field
+    for (let productId of cart.products) {
+      let product = await productModel.findOne(
+        { _id: productId },
+        "name price image"
+      ); // Include image field here
+      if (product) {
+        let key = product._id.toString();
+        if (cartDataStructure[key]) {
+          cartDataStructure[key].quantity += 1;
+        } else {
+          cartDataStructure[key] = {
+            _id: product._id,
+            name: product.name,
+            price: product.price,
+            image: product.image, // Make sure image is included
+            quantity: 1,
+          };
+        }
       }
-    });
+    }
+
     let finalarray = Object.values(cartDataStructure);
-    console.log(finalarray);
+    // console.log(finalarray);
+
+    // Render the cart page with the final cart data
     res.render("cart", {
       cart: finalarray,
       finalprice: cart.totalPrice,
-      quantity: cart.quant,
+      quantity: finalarray.length,
     });
   } catch (error) {
     console.error("Error in aggregation query:", error);
     res.status(500).send("Server Error");
   }
 });
+
+//
+//
+
+//
+
 router.get("/add/:id", userIsLoggedIn, async (req, res) => {
   try {
     // Fetch the cart for the logged-in user

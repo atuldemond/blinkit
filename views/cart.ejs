@@ -25,7 +25,7 @@
       <% cart.forEach(elem=> { %>
       <div class="flex items-center mt-4">
         <img
-          src="data:image/jpg;base64, <%#= elem.image.toString('base64') %>"
+          src="data:image/jpg;base64, <%= elem.image.toString('base64') %>"
           alt="<%= elem.name %>"
           class="w-16 h-16 rounded"
         />
@@ -41,9 +41,10 @@
               ><i class="ri-subtract-line"></i
             ></a>
             <p class="mx-2"><%= elem.quantity %></p>
-            <button class="px-2 py-1 rounded">
-              <i class="ri-add-line"></i>
-            </button>
+            <a href="/cart/add/<%= elem._id %>" class="px-2 py-1 rounded"
+              ><i class="ri-add-line""></i
+            ></a>
+         
           </div>
           <div class="flex gap-2 mt-4">
             <p class="text-gray-500 line-through">
@@ -141,7 +142,7 @@
       </div>
     </div>
 
-    <!-- Donation -->
+    Donation
     <div class="bg-white p-4 rounded-lg shadow mb-4">
       <div class="flex items-center">
         <img

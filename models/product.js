@@ -55,7 +55,7 @@ const validateProduct = (productData) => {
   return productValidationSchema.validate(productData);
 };
 
-// Mongoose Product Model
+// // Mongoose Product Model
 const ProductModel = mongoose.model("Product", productSchema);
 
 module.exports = {
