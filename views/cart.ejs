@@ -245,7 +245,7 @@
         .post("/payment/create/orderId")
         .then(function (response) {
           var options = {
-            key: "rzp_test_cAa3gCF0eP8i4R", // Enter the Key ID generated from the Dashboard
+            key: "rzp_test_B8Z3S3eAriBfsV", // Enter the Key ID generated from the Dashboard
             amount: response.data.amount, // Amount in currency subunits. Default currency is INR.
             currency: response.data.currency,
             name: "BlinkIt",
@@ -262,15 +262,15 @@
                 .then(function (response) {
                   let { razorpayOrderId, razorpayPaymentId, signature } =
                     JSON.parse(response.config.data);
-                  window.location.href = `/order/<%#= userid %>/${razorpayOrderId}/${razorpayPaymentId}/${signature}`;
+                  window.location.href = `/order/${razorpayOrderId}/${razorpayPaymentId}/${signature}`;
                 })
                 .catch(function (error) {
                   console.error(error);
                 });
             },
             prefill: {
-              name: "Harsh Sharma",
-              email: "harsh.sharma@example.com",
+              name: "ATUL Demond",
+              email: "atuldemond@example.com",
               contact: "9000090000",
             },
             notes: {

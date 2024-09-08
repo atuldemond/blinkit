@@ -8,6 +8,8 @@ const productRouter = require("./routes/product");
 const categoryRouter = require("./routes/category");
 const userRouter = require("./routes/user");
 const cartRouter = require("./routes/cart");
+const orderRouter = require("./routes/order");
+const paymentRouter = require("./routes/payment");
 const expressSession = require("express-session");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
@@ -48,6 +50,8 @@ try {
   app.use("/category", categoryRouter);
   app.use("/users", userRouter);
   app.use("/cart", cartRouter);
+  app.use("/payment", paymentRouter);
+  app.use("/order", orderRouter);
 } catch (error) {
   console.error("Error setting up routes:", error);
 }
