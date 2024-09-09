@@ -4,6 +4,10 @@ const Joi = require("joi");
 // Mongoose Order Schema
 const orderSchema = mongoose.Schema(
   {
+    orderId: {
+      type: String,
+      required: true,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
@@ -17,7 +21,7 @@ const orderSchema = mongoose.Schema(
       },
     ],
     totalPrice: { type: Number, required: true, min: 0 },
-    address: { type: String, required: true, minlength: 5 },
+    address: { type: String, minlength: 5 },
     status: {
       type: String,
       required: true,
@@ -58,6 +62,6 @@ const validateOrder = (data) => {
 const OrderModel = mongoose.model("order", orderSchema);
 
 module.exports = {
-  OrderModel: mongoose.model("order", orderSchema),
+  orderModel: mongoose.model("order", orderSchema),
   validateOrder,
 };

@@ -49,6 +49,7 @@ router.get("/", userIsLoggedIn, async (req, res) => {
       cart: finalarray,
       finalprice: cart.totalPrice,
       quantity: finalarray.length,
+      userid: req.session.passport.user,
     });
   } catch (error) {
     console.error("Error in aggregation query:", error);
